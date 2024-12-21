@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Loans</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> <!-- Adjust to your project structure -->
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Loan Approved Prediction</div>
+        <ul class="nav-links">
+            <li><a href="https://www.icicidirect.com/calculators/future-value-calculator" target="_blank" rel="noopener">Features</a></li>
+            <li><a href="https://www.etmoney.com/learn/loans/different-types-of-loans/" target="_blank" rel="noopener">Types of Loans</a></li>
+            <li><a href="https://www.icicibank.com/contact-us" target="_blank" rel="noopener">Contact Us</a></li>
+        </ul>
+        <button class="apply-btn" onclick="scrollToApply()">Apply Now</button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Banner Section -->
+        <section class="banner">
+            <img src="{{ url_for('static', filename='images/hl_banner_mob.jpg') }}" alt="Home Loan Banner" class="banner-image">
+
+            <div class="right-section" id="apply">
+                <h3>Apply Now to Get Digital Sanction</h3>
+                <form id="loan-form" method="POST" action="/predict">
+                    <input type="text" name="name" placeholder="Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="tel" name="phone" placeholder="+91 Mobile Number" required>
+                    <input type="number" name="income" placeholder="Monthly Income (₹)" required>
+                    <input type="number" name="credit_score" placeholder="Credit Score" required>
+                    <input type="text" name="pancard_number" placeholder="Pancard Number" required>
+                    <select name="existing_loans" required>
+                        <option value="">Do you have existing loans?</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                    <input type="text" name="pincode" placeholder="Enter Pincode">
+                    <div class="checkbox">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            I agree to the 
+                            <a href="{{ url_for('static', filename='pdf/Loan_Approval_Terms_and_Conditions.pdf') }}" target="_blank" rel="noopener">Terms & Conditions</a>
+                  </label>
+                    </div>
+                    <button type="submit">Apply Now</button>
+                </form>
+                
+                <!-- Result Placeholder -->
+                <div id="result" style="margin-top: 20px; font-weight: bold;"></div>
+                
+                
+            </div>
+        </section>
+
+       <!-- Features Section -->
+<section class="features">
+    <h2>Features and Benefits</h2>
+    <div class="features-grid">
+        <div>
+            <img src="{{ url_for('static', filename='images/zero_foreclosure.jpg') }}" alt="Zero Foreclosure">
+            <h3>Zero Foreclosure Charges</h3>
+            <p>Applicable only for Home Loans with floating interest rates.</p>
+        </div>
+        <div>
+            <img src="{{ url_for('static', filename='images/interest_rate.png') }}" alt="Attractive Interest Rate">
+            <h3>Attractive Interest Rate</h3>
+            <p>Repo rate linked interest rates.</p>
+        </div>
+        <div>
+            <img src="{{ url_for('static', filename='images/approved_projects.png') }}" alt="Approved Projects">
+            <h3>55,000+ Approved Projects</h3>
+            <p>Explore 55K+ Bank Loan approved projects.</p>
+        </div>
+        <div>
+            <img src="{{ url_for('static', filename='images/digital_sanction.png') }}" alt="Digital Sanction">
+            <h3>Digital Sanction</h3>
+            <p>Online sanction in just a few steps.</p>
+        </div>
+    </div>
+</section>
+
+
+        <!-- Accordion Section -->
+        <section class="accordion-section">
+            <h2>Types of Home Loans</h2>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">Home Loan Interest Rate</button>
+                    <div class="accordion-content">
+                        <p>Enjoy attractive repo-linked interest rates with ICICI Bank Home Loans.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">Home Loan Eligibility Calculator</button>
+                    <div class="accordion-content">
+                        <p>Calculate your loan eligibility in just a few simple steps.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">Benefits of Online Home Loan</button>
+                    <div class="accordion-content">
+                        <p>Experience a hassle-free online application process with minimal documentation.</p>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <button class="accordion-header" aria-expanded="false">Documentation</button>
+                    <div class="accordion-content">
+                        <p>Quick and easy documentation to help you get your loan approved faster.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Taskbar -->
+    <footer class="bottom-taskbar">
+        <button class="apply-btn" onclick="scrollToApply()">Apply Now</button>
+    </footer>
+
+    <!-- JavaScript -->
+    <!-- JavaScript to Handle Form Submission -->
+    <script>
+        document.getElementById('loan-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the form from submitting traditionally
+    
+            const formData = new FormData(this); // Collect form data
+    
+            try {
+                // Send form data using Fetch API (AJAX)
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+    
+                // Parse the JSON response
+                const result = await response.json();
+    
+                // Display the result dynamically
+                if (response.ok) {  
+                    document.getElementById('result').innerHTML = `Prediction: ${result.prediction}, Probability: ${result.probability}%`;
+                } else {
+                    document.getElementById('result').innerHTML = `Error: ${result.error}`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 'Error occurred while submitting the form.';
+            }
+        });
+    </script>    
+</body>
+</html>
